@@ -201,6 +201,17 @@ async function submitAuftrag() {
       spielberichtHochgeladenAm: null
     };
     await saveWithConflictRetry((data) => { data.auftraege.push(auftrag); });
+    // Benachrichtigung (seit 2026-08-03). Der Empfängerkreis wird SERVERSEITIG
+    // aus der Mannschaft des Auftrags bestimmt -- die Trainer:innen dieser
+    // Mannschaft, nicht alle. Ist zu der Mannschaft niemand hinterlegt, geht es
+    // an die Bearbeitenden, damit die Anfrage nicht lautlos untergeht.
+    // Best-effort: der Auftrag steht, eine misslungene Meldung darf ihn nicht
+    // als Fehler erscheinen lassen.
+    try {
+      await gatewayRequest({ action: "fotoauftrag-push", id: auftrag.id });
+    } catch (e) {
+      console.warn("Benachrichtigung fehlgeschlagen", e);
+    }
     renderAuftraege();
     hideNeuerAuftragForm();
   } catch (e) {
