@@ -111,15 +111,6 @@ function setupTabs() {
   });
 }
 
-function setupVersionBadge() {
-  const versionBadgeHeader = document.getElementById("version-badge");
-  const openVersionHistory = () => activateTab("info");
-  versionBadgeHeader.addEventListener("click", openVersionHistory);
-  versionBadgeHeader.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openVersionHistory(); }
-  });
-}
-
 // ---------- Mannschaft-Autosuggest fürs Anlegen-Formular (Editoren legen für
 // JEDES Team an, nicht nur die eigenen -- daher kein renderMannschaftField()/
 // resolveMannschaft() wie bei anderen Apps, sondern Freitext + Datalist) ----------
@@ -511,11 +502,9 @@ function showConnectScreen(errorMsg) {
 }
 
 async function init() {
-  document.getElementById("version-badge").textContent = "v" + APP_VERSION;
   document.getElementById("version-badge-2").textContent = "v" + APP_VERSION;
   renderChangelog();
   setupTabs();
-  setupVersionBadge();
 
   document.getElementById("f-datum").value = localDateIso();
   document.getElementById("btn-submit-auftrag").addEventListener("click", submitAuftrag);
