@@ -15,20 +15,6 @@ const AUFTRAG_AUFBEWAHRUNG_TAGE = 5;
 
 const APP_CHANGELOG = [
   {
-    version: "1.1",
-    groups: [
-      {
-        title: "Benachrichtigung aufs Handy",
-        items: [
-          "Ein neuer Auftrag meldet sich direkt bei den Trainer:innen der betroffenen Mannschaft — nicht bei allen. Bisher gab es keinen Anlass, die App überhaupt zu öffnen.",
-          "Ist zu der Mannschaft niemand hinterlegt, geht die Nachricht an die Zuständigen des Werkzeugs, damit eine Anfrage nicht lautlos untergeht.",
-          "Die Nachricht nennt weder Mannschaft noch Gegner — sie steht auf dem Sperrbildschirm. Worum es geht, sieht man nach dem Antippen.",
-          "Eingeschaltet wird das in der Tools-Übersicht unter „Mein Konto“, einzeln für dieses Werkzeug. Wer es nicht einschaltet, merkt keinen Unterschied."
-        ]
-      }
-    ]
-  },
-  {
     version: "1.0",
     groups: [
       {
@@ -47,6 +33,15 @@ const APP_CHANGELOG = [
           "Ein Auftrag verschwindet 5 Tage nach dem Anlegen von selbst aus der Liste. Bei jedem Auftrag steht, wann es so weit ist.",
           "„Löschen“ entfernt nur den Auftrag aus dieser Liste. Der Nextcloud-Ordner mit Fotos und Spielbericht bleibt erhalten — die Bilder sind das Archiv des Vereins und werden nie mitgelöscht.",
           "Nicht mehr benötigte Foto-Ordner räumt man bei Bedarf direkt in der Nextcloud auf."
+        ]
+      },
+      {
+        title: "Benachrichtigung aufs Handy",
+        items: [
+          "Ein neuer Auftrag meldet sich direkt bei den Trainer:innen der betroffenen Mannschaft — nicht bei allen.",
+          "Ist zu der Mannschaft niemand hinterlegt, geht die Nachricht an die Zuständigen des Werkzeugs, damit eine Anfrage nicht lautlos untergeht.",
+          "Die Nachricht nennt weder Mannschaft noch Gegner — sie steht auf dem Sperrbildschirm. Worum es geht, sieht man nach dem Antippen.",
+          "Eingeschaltet wird das in der Tools-Übersicht unter „Mein Konto“, einzeln für dieses Werkzeug. Wer es nicht einschaltet, merkt keinen Unterschied."
         ]
       },
       {
