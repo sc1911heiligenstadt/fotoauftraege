@@ -1,80 +1,23 @@
-# Fotoaufträge (v1.0)
+# 📸 Fotoaufträge
 
-Fotoauftrags-Verwaltung als eigenständige, clientseitige Web-App ohne
-Build-Step (Vanilla HTML/CSS/JS) — Teil der
-[Tools-Übersicht](https://sc1911heiligenstadt.github.io/ToolsUebersicht/) des 1. SC 1911
-Heiligenstadt.
+Das Social-Media-Team fragt Fotos von einer Mannschaft an; der zuständige Trainer legt per Klick einen eigenen, freigegebenen Nextcloud-Ordner für den Bilder-Upload an und bekommt einen teilbaren Link.
 
-**Live:** https://sc1911heiligenstadt.github.io/fotoauftraege/
+**➡️ [Fotoaufträge öffnen](https://sc1911heiligenstadt.github.io/fotoauftraege/)**
 
----
+## Zugang
 
-## Funktionen
+Die Anmeldung läuft über die [Tools-Übersicht](https://sc1911heiligenstadt.github.io/ToolsUebersicht/) — dort einmal anmelden, danach ist dieses Werkzeug offen.
 
-### Auftrag anlegen (Social-Media-Team)
-- Mannschaft, Datum und optionale Notiz — z.B. "Mittwoch braucht die B-Jugend
-  Fotos vom Training".
-
-### Ordner anlegen (zuständiger Trainer)
-- Der Trainer der angefragten Mannschaft sieht den offenen Auftrag und legt per
-  Klick einen dedizierten Nextcloud-Ordner samt eigenem, teilbarem Freigabelink
-  an.
-- Fotos werden **direkt über diesen Link** hochgeladen — auch von jemandem
-  ohne eigenen Account bei den Vereins-Tools (z.B. per WhatsApp geteilt). Diese
-  App selbst überträgt keine Bilder.
-
-### Abschließen (Social-Media-Team)
-- Sobald die Fotos abgeholt/verarbeitet sind, wird der Auftrag als erledigt
-  markiert.
-
-### Daten & Speicherung
-- Automatische Nextcloud-Synchronisierung über die zentrale Anmeldung in der
-  [Tools-Übersicht](https://sc1911heiligenstadt.github.io/ToolsUebersicht/): einmal dort
-  anmelden, danach wird diese Seite automatisch geladen und gespeichert — auch
-  am Handy, ohne WebDAV-Adresse, Benutzername oder App-Passwort auf dem Gerät.
-- Nur wer das Tool in der Übersicht sehen darf, kann es öffnen. Trainer sehen
-  ausschließlich Aufträge ihrer eigenen Mannschaft(en); Aufträge anlegen und
-  als erledigt markieren bleibt dem Social-Media-Team vorbehalten (Gruppen-
-  Rechte werden serverseitig geprüft).
-
----
+Die Rechte gelten in drei Stufen: **Sehen** (nur ansehen), **Bearbeiten** (Einträge pflegen) und **Administrieren** (Einstellungen und Verwaltung). Wer welche Stufe hat, legt die Tools-Übersicht fest.
 
 ## Lokal starten
 
-`fetch()`-Aufrufe von einem `file://`-Origin verhalten sich inkonsistent (CORS).
-Die App daher über einen lokalen Static-Server öffnen:
+Über den Eintrag `fotoauftraege` in `E:\.claude\launch.json` — der Server läuft dann auf `http://localhost:8786/`.
 
-```
-npx serve .
-```
+## Technik
 
-Hinweis: Die geteilte Anmeldung mit der Tools-Übersicht (`localStorage` unter
-der Origin `sc1911heiligenstadt.github.io`) funktioniert nur auf der Live-Seite, nicht
-unter `localhost`.
+Vanilla JavaScript ohne Build-Schritt — die Dateien werden so ausgeliefert, wie sie im Repo liegen. Veröffentlicht über GitHub Pages. Die Daten liegen in der Vereins-Nextcloud; der Zugriff läuft ausschließlich über den Login-Worker der Tools-Übersicht, nie mit Zugangsdaten im Browser.
 
 ---
 
-## Datenmodell
-
-Eine JSON-Datei, zentral über den Login-Gateway der Tools-Übersicht in der
-Vereins-Nextcloud gespeichert (siehe `db.js`, `GATEWAY_URL`/`GATEWAY_APP_ID`):
-
-```js
-{
-  "auftraege": [
-    {
-      "id", "mannschaft", "datum", "notiz",
-      "status",  // "offen" | "wird-angelegt" | "ordner-angelegt" | "erledigt"
-      "erstelltVon", "erstelltVonVorname", "erstelltVonNachname", "erstelltAm",
-      "ordnerWirdAngelegtVon", "ordnerWirdAngelegtAm",
-      "ordnerPfad", "freigabeLink", "freigabeToken",
-      "ordnerErstelltVon", "ordnerErstelltVonVorname", "ordnerErstelltVonNachname", "ordnerErstelltAm",
-      "erledigtVon", "erledigtAm"
-    }
-  ]
-}
-```
-
-Der Ordner + Freigabelink wird serverseitig über eine dedizierte Gateway-
-Aktion angelegt (echte Nextcloud-Freigabe pro Auftrag, nicht ein gemeinsamer
-Link für alle Teams) — Details siehe `CLAUDE.md`.
+Ein Werkzeug des 1. SC 1911 Heiligenstadt. Alle Werkzeuge auf einen Blick: [Tools-Übersicht](https://sc1911heiligenstadt.github.io/ToolsUebersicht/) · Erklärungen im [Toolbox Wiki](https://sc1911heiligenstadt.github.io/Vereinswiki/).
