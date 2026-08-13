@@ -115,19 +115,46 @@ function setupTabs() {
 // JEDES Team an, nicht nur die eigenen -- daher kein renderMannschaftField()/
 // resolveMannschaft() wie bei anderen Apps, sondern Freitext + Datalist) ----------
 
+// ⚠️ Seit 2026-08-13 ist die ZENTRALE MANNSCHAFTSLISTE die Quelle. Vorher kamen
+// die Vorschläge aus den frei getippten Profilfeldern — dort standen „B1",
+// „B-Junioren" und „B-Junioren 2 (K)" nebeneinander, und wer einen davon
+// erwischte, dessen Auftrag fand der TEAM_FILTERED_APPS-Vergleich beim Trainer
+// nicht wieder. Ein Kurzname aus der Liste trifft dagegen immer.
+//
+// ⚠️ RÜCKFALL auf die Profile, solange die Liste leer ist (noch nicht gepflegt
+// oder alter Worker). Bewusst NICHT gemischt — sonst stünde das alte
+// Durcheinander wieder neben den sauberen Namen.
+//
+// ⚠️ Bleibt ein Freitextfeld mit datalist, kein <select>: Aufträge gibt es auch
+// für Dinge ohne eigene Vereinsmannschaft (Turnier, Aktionstag, Vorstand).
 async function ensureTrainerProfiles() {
   if (trainerProfilesLoaded) return;
   trainerProfilesLoaded = true;
   try {
+    const teams = await fetchVereinsMannschaften();
+    if (teams.length) {
+      mannschaftSuggestions = teams.map((t) => t.kurz);
+      // ⚠️ Reihenfolge der Liste NICHT neu sortieren — sie kommt bereits nach
+      // Stufe sortiert (A1 vor B1 vor C1); alphabetisch stünde E1 vor D1.
+      renderMannschaftSuggestions(teams);
+      return;
+    }
     const { profiles } = await fetchTrainerProfiles();
     const set = new Set();
     (profiles || []).forEach((p) => (p.mannschaften || []).forEach((m) => { if (m) set.add(m); }));
     mannschaftSuggestions = Array.from(set).sort((a, b) => a.localeCompare(b, "de"));
-    const dl = document.getElementById("mannschaft-suggestions");
-    if (dl) dl.innerHTML = mannschaftSuggestions.map((m) => `<option value="${escapeHtml(m)}"></option>`).join("");
+    renderMannschaftSuggestions(mannschaftSuggestions.map((m) => ({ kurz: m, lang: m, liga: "" })));
   } catch (e) {
     console.warn("Mannschaft-Vorschläge konnten nicht geladen werden", e);
   }
+}
+
+function renderMannschaftSuggestions(teams) {
+  const dl = document.getElementById("mannschaft-suggestions");
+  if (!dl) return;
+  dl.innerHTML = teams
+    .map((t) => `<option value="${escapeHtml(t.kurz)}">${escapeHtml(t.lang)}${t.liga ? " · " + escapeHtml(t.liga) : ""}</option>`)
+    .join("");
 }
 
 // ---------- Neuer Auftrag (Editor) — Formular direkt auf der Aufträge-Seite,

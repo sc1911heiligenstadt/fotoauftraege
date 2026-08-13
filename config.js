@@ -15,6 +15,19 @@ const AUFTRAG_AUFBEWAHRUNG_TAGE = 5;
 
 const APP_CHANGELOG = [
   {
+    version: "1.1",
+    groups: [
+      {
+        title: "Mannschaften kommen jetzt aus der einen Vereinsliste",
+        items: [
+          "Beim Anlegen eines Auftrags schlägt das Mannschaftsfeld die echten Mannschaften des Vereins vor — dieselbe Liste, die in der Tools-Übersicht gepflegt wird.",
+          "Vorher kamen die Vorschläge aus den frei getippten Feldern der Trainerprofile. Dort stand dieselbe Mannschaft in mehreren Schreibweisen, und wer die falsche erwischte, dessen Auftrag tauchte beim zuständigen Trainer gar nicht auf.",
+          "Ein eigener Name bleibt möglich: für Aufträge, die zu keiner Mannschaft gehören (Turnier, Aktionstag), einfach frei eintippen."
+        ]
+      }
+    ]
+  },
+  {
     version: "1.0",
     groups: [
       {

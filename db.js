@@ -73,8 +73,40 @@ async function fetchMe() {
 // Für das Mannschaft-Datalist im "Neuer Auftrag"-Formular (Editoren legen Aufträge
 // für JEDES Team an, nicht nur die eigenen — anders als currentMannschaften aus
 // fetchMe(), das die eigenen Teams für die Ordner-anlegen-Berechtigung liefert).
+//
+// ⚠️ Seit 2026-08-13 nur noch RÜCKFALL. Erste Wahl ist die zentrale
+// Mannschaftsliste (siehe fetchVereinsMannschaften unten) — die Profilfelder
+// tragen dieselben Namen nur, solange der Abgleich in der Tools-Übersicht läuft.
 async function fetchTrainerProfiles() {
   return gatewayRequest({ action: "list-trainer-profiles" });
+}
+
+// Die Mannschaften des Vereins aus der zentralen Liste (seit 2026-08-12).
+//
+// ⚠️ GETEILTER FLOTTEN-BAUSTEIN. Wortgleich in busplan/db.js, Materialliste/db.js,
+// spielertool-test/db.js und kadermanager/db.js -- es gibt keinen Build-Step,
+// also wird kopiert. Wer eine Fassung aendert, zieht die anderen mit.
+//
+// Diese App fuehrt ihre Mannschaften weiterhin SELBST: an ihnen haengen die
+// eigentlichen Nutzdaten. Die Liste ist deshalb ein VORSCHLAG, keine Schranke --
+// sie fuellt die Auswahl beim Anlegen, ein frei getippter Name bleibt moeglich.
+//
+// ⚠️ Wirft nicht nach oben durch. Ohne die Liste laeuft die App wie vorher
+// weiter; sie ist Komfort, keine Voraussetzung.
+async function fetchVereinsMannschaften() {
+  try {
+    if (!getSessionToken()) return [];
+    const body = await gatewayRequest({ action: "mannschaften-load" });
+    const teams = (body && Array.isArray(body.teams)) ? body.teams : [];
+    // Archivierte sind aufgeloeste Mannschaften -- die soll niemand mehr neu
+    // anlegen; vorhandene Eintraege bleiben davon unberuehrt.
+    return teams
+      .filter((t) => t && t.kurz && !t.archiviert)
+      .map((t) => ({ kurz: String(t.kurz), lang: String(t.lang || t.kurz), liga: String(t.liga || "") }));
+  } catch (e) {
+    console.warn("Vereins-Mannschaftsliste nicht ladbar", e);
+    return [];
+  }
 }
 
 // Legt für einen offenen Auftrag serverseitig den Nextcloud-Ordner + echten
