@@ -93,6 +93,27 @@ button.btn:disabled { opacity: 0.6; cursor: default; }
 .muted { color: var(--muted); font-size: 13px; }
 .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); }
 
+/* Wer hat die Benachrichtigung bekommen (seit 2026-08-19). Steht ueber der
+   Auftragsliste, NICHT im Formular -- das ist nach dem Anlegen schon zu. */
+.push-hinweis {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  background: var(--green-light);
+  border: 1px solid var(--green);
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+/* Der Ersatzweg hat gegriffen: die Meldung ging an alle Bearbeitenden, weil zu
+   der Mannschaft niemand gefunden wurde. Gold statt Rot -- es ist kein Fehler,
+   der Auftrag steht; es ist eine Sache, die jemand nachziehen sollte. */
+.push-hinweis.ersatz {
+  background: var(--gold-light);
+  border-color: var(--gold);
+}
+
 .version-badge {
   font-size: 11px;
   font-weight: 600;

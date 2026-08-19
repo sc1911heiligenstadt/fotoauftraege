@@ -186,6 +186,58 @@ function showFormError(msg) {
   el.textContent = msg || "";
 }
 
+// Wer hat die Benachrichtigung bekommen? (seit 2026-08-19)
+//
+// ⚠️ Das ist der eigentliche Zweck dieser Zeile: der Worker fällt auf ALLE
+// Bearbeitenden zurück, wenn er zu der Mannschaft niemanden findet — und das
+// fiel bis hierher nur auf, wenn sich ein verwunderter Empfänger meldete
+// (genau so ist der Fall vom 2026-08-19 aufgeflogen). Steht hier der
+// Ersatzweg, passt die Mannschaft im Auftrag zu keinem Trainerprofil.
+//
+// ⚠️ Fehlen die Felder (älterer Worker), wird NICHTS behauptet — eine Zeile
+// „niemand benachrichtigt" wäre dann schlicht falsch. Gleiche Linie wie beim
+// Reichweiten-Block der Rundnachricht in der Tools-Übersicht.
+//
+// ⚠️ Ausschließlich textContent: die Mannschaft ist Freitext, die Namen kommen
+// aus fremden Konten.
+function zeigePushHinweis(res, mannschaft) {
+  const el = document.getElementById("push-hinweis");
+  if (!el) return;
+
+  // Der Aufruf selbst ist gescheitert. Der Auftrag steht trotzdem — das muss
+  // dabeistehen, sonst legt jemand denselben Auftrag ein zweites Mal an.
+  if (res === null) {
+    el.className = "push-hinweis ersatz";
+    el.textContent = "Der Auftrag ist gespeichert. Die Benachrichtigung ging nicht raus — "
+      + "bitte den zuständigen Trainer selbst Bescheid geben.";
+    el.style.display = "block";
+    return;
+  }
+  if (!res || typeof res.infrage !== "number" || !Array.isArray(res.namen)) {
+    el.style.display = "none";
+    el.textContent = "";
+    return;
+  }
+
+  const rest = res.infrage - res.namen.length;
+  const liste = res.namen.join(", ") + (rest > 0 ? ` und ${rest} weitere` : "");
+
+  if (!res.infrage) {
+    el.className = "push-hinweis ersatz";
+    el.textContent = "Der Auftrag ist gespeichert, aber es wurde niemand benachrichtigt.";
+  } else if (res.ersatz) {
+    el.className = "push-hinweis ersatz";
+    el.textContent = `Der Auftrag ist gespeichert. Zu „${mannschaft}" ist kein Trainer hinterlegt — `
+      + `die Meldung ging deshalb ersatzweise an alle Bearbeitenden: ${liste}. `
+      + `Wenn das die Falschen sind: in der Tools-Übersicht unter „Mannschaften" `
+      + `die richtigen Leute an „${mannschaft}" hängen.`;
+  } else {
+    el.className = "push-hinweis";
+    el.textContent = `Der Auftrag ist gespeichert. Benachrichtigt: ${liste}.`;
+  }
+  el.style.display = "block";
+}
+
 async function submitAuftrag() {
   showFormError("");
   const mannschaft = document.getElementById("f-mannschaft").value.trim();
@@ -235,9 +287,11 @@ async function submitAuftrag() {
     // Best-effort: der Auftrag steht, eine misslungene Meldung darf ihn nicht
     // als Fehler erscheinen lassen.
     try {
-      await gatewayRequest({ action: "fotoauftrag-push", id: auftrag.id });
+      const res = await gatewayRequest({ action: "fotoauftrag-push", id: auftrag.id });
+      zeigePushHinweis(res, mannschaft);
     } catch (e) {
       console.warn("Benachrichtigung fehlgeschlagen", e);
+      zeigePushHinweis(null, mannschaft);
     }
     renderAuftraege();
     hideNeuerAuftragForm();

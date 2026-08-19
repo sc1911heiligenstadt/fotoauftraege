@@ -15,6 +15,19 @@ const AUFTRAG_AUFBEWAHRUNG_TAGE = 5;
 
 const APP_CHANGELOG = [
   {
+    version: "1.2",
+    groups: [
+      {
+        title: "Die Benachrichtigung trifft wieder die richtigen Leute",
+        items: [
+          "Bisher musste die Mannschaft im Auftrag Buchstabe für Buchstabe zu der im Trainerprofil passen. Seit die Aufträge den Kurznamen aus der Vereinsliste tragen („B1\"), in den Profilen aber noch die ausgeschriebene Form steht („B-Junioren 1\"), passte nichts mehr zusammen — und die Meldung ging ersatzweise an alle Bearbeitenden statt an die zuständigen Trainer.",
+          "Jetzt gelten beide Schreibweisen als dieselbe Mannschaft. Das gilt auch dafür, welche Aufträge ein Trainer überhaupt sieht und bei welchen er den Ordner anlegen darf — dort war derselbe Vergleich im Weg.",
+          "Nach dem Anlegen steht über der Liste, wer die Benachrichtigung bekommen hat. Findet sich zu der Mannschaft niemand, sagt die Zeile das ausdrücklich, statt es stillschweigend an alle Bearbeitenden zu schicken."
+        ]
+      }
+    ]
+  },
+  {
     version: "1.1",
     groups: [
       {
