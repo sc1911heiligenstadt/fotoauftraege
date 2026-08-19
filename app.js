@@ -195,7 +195,7 @@ function showFormError(msg) {
 // Ersatzweg, passt die Mannschaft im Auftrag zu keinem Trainerprofil.
 //
 // ⚠️ Fehlen die Felder (älterer Worker), wird NICHTS behauptet — eine Zeile
-// „niemand benachrichtigt" wäre dann schlicht falsch. Gleiche Linie wie beim
+// „niemand benachrichtigt“ wäre dann schlicht falsch. Gleiche Linie wie beim
 // Reichweiten-Block der Rundnachricht in der Tools-Übersicht.
 //
 // ⚠️ Ausschließlich textContent: die Mannschaft ist Freitext, die Namen kommen
@@ -227,10 +227,10 @@ function zeigePushHinweis(res, mannschaft) {
     el.textContent = "Der Auftrag ist gespeichert, aber es wurde niemand benachrichtigt.";
   } else if (res.ersatz) {
     el.className = "push-hinweis ersatz";
-    el.textContent = `Der Auftrag ist gespeichert. Zu „${mannschaft}" ist kein Trainer hinterlegt — `
+    el.textContent = `Der Auftrag ist gespeichert. Zu „${mannschaft}“ ist kein Trainer hinterlegt — `
       + `die Meldung ging deshalb ersatzweise an alle Bearbeitenden: ${liste}. `
-      + `Wenn das die Falschen sind: in der Tools-Übersicht unter „Mannschaften" `
-      + `die richtigen Leute an „${mannschaft}" hängen.`;
+      + `Wenn das die Falschen sind: in der Tools-Übersicht unter „Mannschaften“ `
+      + `die richtigen Leute an „${mannschaft}“ hängen.`;
   } else {
     el.className = "push-hinweis";
     el.textContent = `Der Auftrag ist gespeichert. Benachrichtigt: ${liste}.`;
